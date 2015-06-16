@@ -46,3 +46,16 @@ class Memory(object):
     def insert(self, value):
         self.memory = self.mapping(value, self.memory)
 
+
+class Pipeline(object):
+
+    def __init__(self):
+        self.router = Router()
+        self.memory = Memory()
+
+    def run(self, values):
+        mapping = self.router.map(values)
+        for i in range(2):
+            for j in range(2):
+                self.memory.insert(mapping[i][j])
+        return self.memory.memory
