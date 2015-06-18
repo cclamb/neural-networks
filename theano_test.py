@@ -161,15 +161,9 @@ class Router(object):
 
     def map(self, values):
         result = [
-            [[0, 0, 0],
-             [0, 0, 0],
-             [0, 0, 0]],
-            [[0, 0, 0],
-             [0, 0, 0],
-             [0, 0, 0]],
-            [[0, 0, 0],
-             [0, 0, 0],
-             [0, 0, 0]]
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
         ]
         for i in range(3):
             for j in range(3):
@@ -211,6 +205,15 @@ class Memory(object):
             value.reshape(3, 9),
             self.memory.reshape(3, 9)
         ).reshape(3, 3, 3)
+
+
+class Integrator(object):
+
+    def __init__(self):
+        return
+
+    def integrate(self, memory):
+        return
 
 
 class Pipeline(object):
