@@ -213,7 +213,18 @@ class Integrator(object):
         return
 
     def integrate(self, memory):
-        return
+        result = [
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+        ]
+        for i in range(3):
+            for j in range(3):
+                sum = 0
+                for k in range(3):
+                    sum += memory[i][j][k]
+                result[i][j] = sum
+        return result
 
 
 class Pipeline(object):
@@ -221,10 +232,11 @@ class Pipeline(object):
     def __init__(self):
         self.router = Router()
         self.memory = Memory()
+        self.integrator = Integrator()
 
     def run(self, values):
         mapping = self.router.map(values)
         for i in range(3):
             for j in range(3):
                 self.memory.insert(mapping[i][j])
-        return self.memory.memory
+        return self.integrator.integrate(self.memory.memory)
