@@ -87,11 +87,6 @@ class IterativePipeline(Pipeline):
 
     def run(self, values):
         value = values[0]
-        # result = np.array([
-        #     [0, 0, 0],
-        #     [0, 0, 0],
-        #     [0, 0, 0],
-        # ])
         result = np.zeros((3, 3))
         for i in range(2):
             value = self.combinator.combine(result, value[i])
