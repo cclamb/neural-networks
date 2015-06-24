@@ -2,7 +2,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from networks.mlp import *
+from neurality.mlp import *
 
 # Training data - two randomly-generated Gaussian-distributed clouds of points in 2d space
 np.random.seed(0)
