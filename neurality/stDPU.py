@@ -5,153 +5,11 @@ import theano.tensor as T
 
 from theano import function
 
+from .utilities import unpickle
 
 class Router(object):
     def __init__(self, values):
         self.values = values
-        # self.values = [
-        #     [
-        #         (1, np.array
-        #             (
-        #             [
-        #                 [[1, 0, 0],
-        #                  [0, 0, 1],
-        #                  [0, 0, 0]],
-        #                 [[0, 0, 0],
-        #                  [0, 1, 0],
-        #                  [0, 0, 0]],
-        #                 [[0, 0, 0],
-        #                  [0, 1, 0],
-        #                  [0, 0, 0]]
-        #             ]
-        #         )
-        #          ),
-        #         (2, np.array
-        #             (
-        #             [
-        #                 [[1, 0, 0],
-        #                  [0, 0, 1],
-        #                  [0, 0, 0]],
-        #                 [[0, 0, 0],
-        #                  [0, 1, 0],
-        #                  [0, 0, 0]],
-        #                 [[0, 0, 0],
-        #                  [0, 1, 0],
-        #                  [0, 0, 0]]
-        #             ]
-        #         )
-        #          ),
-        #         (2, np.array
-        #             (
-        #             [
-        #                 [[1, 0, 0],
-        #                  [0, 0, 1],
-        #                  [0, 0, 0]],
-        #                 [[0, 0, 0],
-        #                  [0, 1, 0],
-        #                  [0, 0, 0]],
-        #                 [[0, 0, 0],
-        #                  [0, 1, 0],
-        #                  [0, 0, 0]]
-        #             ]
-        #         )
-        #          )
-        #     ],
-        #     [
-        #         (2.3, np.array
-        #             (
-        #             [
-        #                 [[1, 0, 0],
-        #                  [0, 0, 1],
-        #                  [0, 0, 0]],
-        #                 [[0, 0, 0],
-        #                  [0, 1, 0],
-        #                  [0, 0, 0]],
-        #                 [[0, 0, 0],
-        #                  [0, 1, 0],
-        #                  [0, 0, 0]]
-        #             ]
-        #         )
-        #          ),
-        #         (3.2, np.array
-        #             (
-        #             [
-        #                 [[1, 0, 0],
-        #                  [0, 0, 1],
-        #                  [0, 0, 0]],
-        #                 [[0, 0, 0],
-        #                  [0, 1, 0],
-        #                  [0, 0, 0]],
-        #                 [[0, 0, 0],
-        #                  [0, 1, 0],
-        #                  [0, 0, 0]]
-        #             ]
-        #         )
-        #          ),
-        #         (2, np.array
-        #             (
-        #             [
-        #                 [[1, 0, 0],
-        #                  [0, 0, 1],
-        #                  [0, 0, 0]],
-        #                 [[0, 0, 0],
-        #                  [0, 1, 0],
-        #                  [0, 0, 0]],
-        #                 [[0, 0, 0],
-        #                  [0, 1, 0],
-        #                  [0, 0, 0]]
-        #             ]
-        #         )
-        #          )
-        #     ],
-        #     [
-        #         (2.3, np.array
-        #             (
-        #             [
-        #                 [[1, 0, 0],
-        #                  [0, 0, 1],
-        #                  [0, 0, 0]],
-        #                 [[0, 0, 0],
-        #                  [0, 1, 0],
-        #                  [0, 0, 0]],
-        #                 [[0, 0, 0],
-        #                  [0, 1, 0],
-        #                  [0, 0, 0]]
-        #             ]
-        #         )
-        #          ),
-        #         (3.2, np.array
-        #             (
-        #             [
-        #                 [[1, 0, 0],
-        #                  [0, 0, 1],
-        #                  [0, 0, 0]],
-        #                 [[0, 0, 0],
-        #                  [0, 1, 0],
-        #                  [0, 0, 0]],
-        #                 [[0, 0, 0],
-        #                  [0, 1, 0],
-        #                  [0, 0, 0]]
-        #             ]
-        #         )
-        #          ),
-        #         (2, np.array
-        #             (
-        #             [
-        #                 [[1, 0, 0],
-        #                  [0, 0, 1],
-        #                  [0, 0, 0]],
-        #                 [[0, 0, 0],
-        #                  [0, 1, 0],
-        #                  [0, 0, 0]],
-        #                 [[0, 0, 0],
-        #                  [0, 1, 0],
-        #                  [0, 0, 0]]
-        #             ]
-        #         )
-        #          )
-        #     ]
-        # ]
         value = T.scalar('value')
         weight = T.scalar('weight')
         transform = T.dmatrix('transform')
@@ -159,18 +17,12 @@ class Router(object):
         return
 
     def map(self, values):
-        result = [
-            [0, 0, 0],
-            [0, 0, 0],
-            [0, 0, 0],
-        ]
+        result = [[0 for x in range(3)] for x in range(3)]
         for i in range(3):
             for j in range(3):
                 value = values[i][j]
                 weight = self.values[i][j][0]
                 transform = self.values[i][j][1]
-                # import ipdb
-                # ipdb.set_trace()
                 result[i][j] = self.mapping(
                     value,
                     weight,
@@ -199,11 +51,6 @@ class Integrator(object):
         return
 
     def integrate(self, memory):
-        # result = [
-        #     [0, 0, 0],
-        #     [0, 0, 0],
-        #     [0, 0, 0],
-        # ]
         result = np.zeros((3, 3))
         for i in range(3):
             for j in range(3):
@@ -215,7 +62,6 @@ class Integrator(object):
 
 
 class Pipeline(object):
-
     def __init__(self, router_values):
         self.router = Router(router_values)
         self.memory = Memory()
@@ -230,23 +76,23 @@ class Pipeline(object):
 
 
 class Combinator(object):
-
     def combine(self, lhs, rhs):
         return lhs + rhs
 
 
 class IterativePipeline(Pipeline):
-    def __init__(self):
-        super(IterativePipeline, self).__init__()
+    def __init__(self, router_values):
+        super(IterativePipeline, self).__init__(router_values)
         self.combinator = Combinator()
 
     def run(self, values):
         value = values[0]
-        result = np.array([
-            [0, 0, 0],
-            [0, 0, 0],
-            [0, 0, 0],
-        ])
+        # result = np.array([
+        #     [0, 0, 0],
+        #     [0, 0, 0],
+        #     [0, 0, 0],
+        # ])
+        result = np.zeros((3, 3))
         for i in range(2):
             value = self.combinator.combine(result, value[i])
             result = super(IterativePipeline, self).run(value)
@@ -254,6 +100,6 @@ class IterativePipeline(Pipeline):
 
 
 def run_pipeline():
-
-    p = IterativePipeline()
+    router_values, input_values = unpickle()
+    p = IterativePipeline(router_values)
     return p.run(input_values)
